@@ -28,6 +28,9 @@ class Client(object):
         await self._http_client.close()
 
     async def request(self, method, url, **kwargs):
+        if self._http_client.closed:
+            self._http_client = ClientSession()
+
         try:
             response = await self._authorized_fetch(method,
                                                     url,
