@@ -32,6 +32,8 @@ class TokenManager(object):
             return self._token.access_token
 
     async def _get_token_data(self):
+        if self._http_client.closed:
+            self._http_client = ClientSession()
         return await self._request_token()
 
     def reset_token(self):
@@ -41,6 +43,8 @@ class TokenManager(object):
         token_data = await self._get_token_data()
         self._token = Token(token_data.get('access_token', ''),
                             token_data.get('expires_in', 0))
+        logger.debug('Token received, expires in: ' + str(self._token._expires_on))
+
 
     async def _request_token(self):
         if not self._token_endpoint:

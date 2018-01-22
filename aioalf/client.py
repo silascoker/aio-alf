@@ -30,7 +30,6 @@ class Client(object):
     async def request(self, method, url, **kwargs):
         if self._http_client.closed:
             self._http_client = ClientSession()
-
         try:
             response = await self._authorized_fetch(method,
                                                     url,
